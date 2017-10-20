@@ -5,10 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Set;
@@ -224,7 +228,26 @@ public class RestTemplateController {
         User user = new User();
         user.setId(10l);
         user.setName("wade");
+        user.setAge(20);
         return user.toString();
+    }
+
+    //restTemplate.execute()
+    @GetMapping("/user/execute/{id}")
+    public String execute(@PathVariable String id){
+        String url = "http://127.0.0.1:7900/user/execute/info";
+        ResponseExtractor<String> responseExtractor=new ResponseExtractor<String>() {
+            @Override
+            public String extractData(ClientHttpResponse clientHttpResponse) throws IOException {
+                return "hello,world";
+            }
+        };
+        String result=restTemplate.execute(url,HttpMethod.GET, null,responseExtractor,id);
+        return result;
+    }
+    @GetMapping("/user/execute/info")
+    public String exexuteInfo(){
+        return  "hello";
     }
 
 
