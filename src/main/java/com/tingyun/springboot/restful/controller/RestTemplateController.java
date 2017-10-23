@@ -5,10 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,7 +28,7 @@ public class RestTemplateController {
     //get方法
     @GetMapping("/get/user/{id}")
     public User getUserId(@PathVariable Long id) {
-        User u = this.restTemplate.getForObject("http://localhost:7900/user/id",
+        User u = this.restTemplate.getForObject("http://localhost:7900/user/id/" + id,
                 User.class);
         System.out.println(u);
         return u;
@@ -38,7 +36,7 @@ public class RestTemplateController {
 
 
     //模拟一个查询数据库的操作
-    @GetMapping("/user/id")
+    @GetMapping("/user/id/{id}")
     public User getUser() {
         User user = new User();
         user.setId(10l);
@@ -51,12 +49,12 @@ public class RestTemplateController {
     //restTemplate.postForObject方法
     @GetMapping("/user/post/{id}")
     public User setUser(@PathVariable String id) {
-        String url = "http://127.0.0.1:7900/user/info";
+        String url = "http://127.0.0.1:7900/user/info/" + id;
         User user = restTemplate.postForObject(url, null, User.class, id);
         return user;
     }
 
-    @PostMapping("/user/info")
+    @PostMapping("/user/info/{id}")
     public User getUserForPost() {
         User user = new User();
         user.setName("wade");
@@ -67,12 +65,12 @@ public class RestTemplateController {
     //restTemplat.put方法
     @GetMapping("/user/put/{id}")
     public void putUser(@PathVariable String id) {
-        String url = "http://127.0.0.1:7900/user/put/info";
+        String url = "http://127.0.0.1:7900/user/put/info/" + id;
         restTemplate.put(url, null, id);
     }
 
     //請求類型必須為put類型
-    @PutMapping("/user/put/info")
+    @PutMapping("/user/put/info/{id}")
     public void putUserInfo() {
         User user = new User();
         user.setName("wade");
@@ -84,14 +82,14 @@ public class RestTemplateController {
     //restTemplat.getForEntity()
     @GetMapping("/user/getForEntity/{id}")
     public String getForEntity(@PathVariable String id) {
-        String url = "http://127.0.0.1:7900/user/getForEntity/info";
+        String url = "http://127.0.0.1:7900/user/getForEntity/info/" + id;
         ResponseEntity responseEntity = restTemplate.getForEntity(url, String.class, id);
         String body = (String) responseEntity.getBody();
 
         return body;
     }
 
-    @GetMapping("/user/getForEntity/info")
+    @GetMapping("/user/getForEntity/info/{id}")
     public String getResponseEntity() {
         User user = new User();
         user.setName("wade");
@@ -103,13 +101,13 @@ public class RestTemplateController {
     //restTemplate.postForEntity()
     @GetMapping("/user/postForEntity/{id}")
     public User postForEntity(@PathVariable String id) {
-        String url = "http://127.0.0.1:7900/user/postForEntity/info";
+        String url = "http://127.0.0.1:7900/user/postForEntity/info/" + id;
         ResponseEntity<User> responseEntity = restTemplate.postForEntity(url, null, User.class, id);
         User user = responseEntity.getBody();
         return user;
     }
 
-    @PostMapping("/user/postForEntity/info")
+    @PostMapping("/user/postForEntity/info/{id}")
     public User postForEntity() {
         User user = new User();
         user.setId(10l);
@@ -123,7 +121,7 @@ public class RestTemplateController {
     //restTemplate.postForLocation()
     @GetMapping("/user/postForLocation/{id}")
     public String postForLocation(@PathVariable String id) {
-        String url = "http://127.0.0.1:7900/user/postForLocation/info";
+        String url = "http://127.0.0.1:7900/user/postForLocation/info/" + id;
         URI uri = restTemplate.postForLocation(url, id);
         System.err.println(uri);
         if (uri == null) {
@@ -133,7 +131,7 @@ public class RestTemplateController {
         }
     }
 
-    @PostMapping("/user/postForLocation/info")
+    @PostMapping("/user/postForLocation/info/{id}")
     public URI postForLocation() throws URISyntaxException {
         URI uri = new URI("http://127.0.0.1:7900/user/postForLocation/info");
         return uri;
@@ -142,13 +140,13 @@ public class RestTemplateController {
     //restTemplate.headForHeaders()
     @GetMapping("/user/headerForHeaders/{id}")
     public String headerForHeaders(@PathVariable String id) {
-        String url = "http://127.0.0.1:7900/user/headerForHeaders/info";
+        String url = "http://127.0.0.1:7900/user/headerForHeaders/info/" + id;
         HttpHeaders httpHeaders = restTemplate.headForHeaders(url, id);
         httpHeaders.add("java", "agent");
         return httpHeaders.toString();
     }
 
-    @GetMapping("/user/headerForHeaders/info")
+    @GetMapping("/user/headerForHeaders/info/{id}")
     public String headerForHeadersInfo() {
         User user = new User();
         user.setId(10l);
@@ -163,11 +161,11 @@ public class RestTemplateController {
     //restTemplate.delete()
     @GetMapping("/user/delete/{id}")
     public void delete(@PathVariable String id) {
-        String url = "http://127.0.0.1:7900/user/delete/info";
+        String url = "http://127.0.0.1:7900/user/delete/info/" + id;
         restTemplate.delete(url, id);
     }
 
-    @DeleteMapping("/user/delete/info")
+    @DeleteMapping("/user/delete/info/{id}")
     public void deleteInfo() {
         User user = new User();
         user.setId(10l);
@@ -175,37 +173,16 @@ public class RestTemplateController {
         System.err.println(user);
     }
 
-    //restTemplate.patchForObject()
-    @GetMapping("/user/patchForObject/{id}")
-    public String patchForObject(@PathVariable String id) {
-        RestTemplate restTemplate1 = new RestTemplate();
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectionRequestTimeout(5000);
-        requestFactory.setConnectTimeout(5000);
-        restTemplate1.setRequestFactory(requestFactory);
-        String url = "http://127.0.0.1:7900/user/patchForObject/info";
-
-        String result = restTemplate1.patchForObject(url, null, String.class, id);
-        return result;
-    }
-
-    @PatchMapping("/user/patchForObject/info")
-    public String patchForObject() {
-        User user = new User();
-        user.setId(10l);
-        user.setName("wade");
-        return user.toString();
-    }
 
     //restTemplate.optionsForAllow()
     @GetMapping("/user/optionsForAllow/{id}")
     public Set<HttpMethod> optionsForAllow(@PathVariable String id) {
-        String url = "http://127.0.0.1:7900/user/optionsForAllow/info";
+        String url = "http://127.0.0.1:7900/user/optionsForAllow/info/" + id;
         Set<HttpMethod> setHttpMethod = restTemplate.optionsForAllow(url, id);
         return setHttpMethod;
     }
 
-    @GetMapping("/user/optionsForAllow/info")
+    @GetMapping("/user/optionsForAllow/info/{id}")
     public void optionsForAllowInfo() {
         User user = new User();
         user.setId(10l);
@@ -217,13 +194,13 @@ public class RestTemplateController {
     //restTemplate.exchange()
     @GetMapping("/user/exchange/{id}")
     public String exchange(@PathVariable String id) {
-        String url = "http://127.0.0.1:7900/user/exchange/info";
+        String url = "http://127.0.0.1:7900/user/exchange/info/" + id;
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
                 null, String.class, id);
         return responseEntity.getBody();
     }
 
-    @GetMapping("/user/exchange/info")
+    @GetMapping("/user/exchange/info/{id}")
     public String exchagenInfo() {
         User user = new User();
         user.setId(10l);
@@ -234,21 +211,118 @@ public class RestTemplateController {
 
     //restTemplate.execute()
     @GetMapping("/user/execute/{id}")
-    public String execute(@PathVariable String id){
-        String url = "http://127.0.0.1:7900/user/execute/info";
-        ResponseExtractor<String> responseExtractor=new ResponseExtractor<String>() {
+    public String execute(@PathVariable String id) {
+        String url = "http://127.0.0.1:7900/user/execute/info/" + id;
+        ResponseExtractor<String> responseExtractor = new ResponseExtractor<String>() {
             @Override
             public String extractData(ClientHttpResponse clientHttpResponse) throws IOException {
                 return "hello,world";
             }
         };
-        String result=restTemplate.execute(url,HttpMethod.GET, null,responseExtractor,id);
+        String result = restTemplate.execute(url, HttpMethod.GET, null, responseExtractor, id);
         return result;
     }
-    @GetMapping("/user/execute/info")
-    public String exexuteInfo(){
-        return  "hello";
+
+    @GetMapping("/user/execute/info/{id}")
+    public String exexuteInfo() {
+        return "hello";
     }
 
+    //restTemplate.patchForObject()
+    @GetMapping("/user/patchForObject/{id}")
+    public String patchForObject(@PathVariable String id) {
+        RestTemplate restTemplate1 = new RestTemplate();
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setConnectionRequestTimeout(5000);
+        requestFactory.setConnectTimeout(5000);
+        restTemplate1.setRequestFactory(requestFactory);
+        String url = "http://127.0.0.1:7900/user/patchForObject/info/" + id;
+
+        String result = restTemplate1.patchForObject(url, null, String.class, id);
+        return result;
+    }
+
+    @PatchMapping("/user/patchForObject/info/{id}")
+    public String patchForObject() {
+        User user = new User();
+        user.setId(10l);
+        user.setName("wade");
+        return user.toString();
+    }
+
+
+    //netty支持
+    @GetMapping("/user/netty/{id}")
+    public String netty(@PathVariable String id) {
+        RestTemplate restTemplate1 = new RestTemplate();
+        Netty4ClientHttpRequestFactory requestFactory = new Netty4ClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(5000);
+        requestFactory.setMaxResponseSize(10000);
+        restTemplate1.setRequestFactory(requestFactory);
+        String url = "http://127.0.0.1:7900/user/netty/info/" + id;
+
+        HttpHeaders httpHeaders = restTemplate1.headForHeaders(url);
+        httpHeaders.add("java", "agent");
+        return httpHeaders.toString();
+    }
+
+    @GetMapping("/user/netty/info/{id}")
+    public String nettyInfo(@PathVariable String id) {
+        User user = new User();
+        user.setId(10l);
+        user.setName("wade");
+        System.err.println(user.toString());
+        return user.toString();
+    }
+
+
+    //okhttp
+    @GetMapping("/user/okHttp/{id}")
+    public String okHttp(@PathVariable String id){
+        RestTemplate restTemplate1=new RestTemplate();
+        OkHttpClientHttpRequestFactory requestFactory =new OkHttpClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(5000);
+        requestFactory.setWriteTimeout(10000);
+        restTemplate1.setRequestFactory(requestFactory);
+
+        String url="http://127.0.0.1:7900/user/okHttp/info/" + id;
+        HttpHeaders httpHeaders = restTemplate1.headForHeaders(url);
+        httpHeaders.add("java", "agent");
+        return httpHeaders.toString();
+    }
+
+    @GetMapping("/user/okHttp/info/{id}")
+    public String okHttpInfo(@PathVariable String id){
+        User user = new User();
+        user.setId(Long.valueOf(id));
+        user.setName("wade");
+        System.err.println(user.toString());
+        return user.toString();
+    }
+
+
+    //okHttp3
+    @GetMapping("/user/okHttp3/{id}")
+    public String okHttp3(@PathVariable String id){
+        RestTemplate restTemplate1=new RestTemplate();
+        OkHttp3ClientHttpRequestFactory requestFactory=new OkHttp3ClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(5000);
+        requestFactory.setReadTimeout(5000);
+
+        restTemplate1.setRequestFactory(requestFactory);
+        String url="http://127.0.0.1:7900/user/okHttp3/info/" + id;
+        HttpHeaders httpHeaders = restTemplate1.headForHeaders(url);
+        httpHeaders.add("java", "agent");
+        return httpHeaders.toString();
+    }
+    @GetMapping("/user/okHttp3/info/{id}")
+    public String okHttp3Info(@PathVariable String id){
+        System.err.println("id: "+id);
+        User user = new User();
+        user.setId(Long.valueOf(id));
+        user.setUsername("wade");
+        System.err.println(user.toString());
+        return user.toString();
+    }
 
 }
