@@ -6,7 +6,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
@@ -59,7 +62,7 @@ public class RestTemplateController {
     }
 
     //@PostMapping("/user/info/{id}")
-    @RequestMapping(value = "/user/info/{id}",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/info/{id}", method = RequestMethod.POST)
     public User getUserForPost() {
         User user = new User();
         user.setName("wade");
@@ -69,7 +72,7 @@ public class RestTemplateController {
 
     //restTemplat.put方法
     //@GetMapping("/user/put/{id}")
-    @RequestMapping(value = "/user/put/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/put/{id}", method = RequestMethod.GET)
     public void putUser(@PathVariable String id) {
         String url = "http://127.0.0.1:7900/user/put/info/" + id;
         restTemplate.put(url, null, id);
@@ -77,7 +80,7 @@ public class RestTemplateController {
 
     //請求類型必須為put類型
     //@PutMapping("/user/put/info/{id}")
-    @RequestMapping(value = "/user/put/info/{id}",method = RequestMethod.PUT)
+    @RequestMapping(value = "/user/put/info/{id}", method = RequestMethod.PUT)
     public void putUserInfo() {
         User user = new User();
         user.setName("wade");
@@ -88,7 +91,7 @@ public class RestTemplateController {
 
     //restTemplat.getForEntity()
     //@GetMapping("/user/getForEntity/{id}")
-    @RequestMapping(value = "/user/getForEntity/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getForEntity/{id}", method = RequestMethod.GET)
     public String getForEntity(@PathVariable String id) {
         String url = "http://127.0.0.1:7900/user/getForEntity/info/" + id;
         ResponseEntity responseEntity = restTemplate.getForEntity(url, String.class, id);
@@ -98,7 +101,7 @@ public class RestTemplateController {
     }
 
     //@GetMapping("/user/getForEntity/info/{id}")
-    @RequestMapping(value = "/user/getForEntity/info/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/getForEntity/info/{id}", method = RequestMethod.GET)
     public String getResponseEntity() {
         User user = new User();
         user.setName("wade");
@@ -109,7 +112,7 @@ public class RestTemplateController {
 
     //restTemplate.postForEntity()
     //@GetMapping("/user/postForEntity/{id}")
-    @RequestMapping(value = "/user/postForEntity/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/postForEntity/{id}", method = RequestMethod.GET)
     public User postForEntity(@PathVariable String id) {
         String url = "http://127.0.0.1:7900/user/postForEntity/info/" + id;
         ResponseEntity<User> responseEntity = restTemplate.postForEntity(url, null, User.class, id);
@@ -118,7 +121,7 @@ public class RestTemplateController {
     }
 
     //@PostMapping("/user/postForEntity/info/{id}")
-    @RequestMapping(value = "/user/postForEntity/info/{id}",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/postForEntity/info/{id}", method = RequestMethod.POST)
     public User postForEntity() {
         User user = new User();
         user.setId(10l);
@@ -144,7 +147,7 @@ public class RestTemplateController {
     }
 
     //@PostMapping("/user/postForLocation/info/{id}")
-    @RequestMapping(value = "/user/postForLocation/info/{id}",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/postForLocation/info/{id}", method = RequestMethod.POST)
     public URI postForLocation() throws URISyntaxException {
         URI uri = new URI("http://127.0.0.1:7900/user/postForLocation/info");
         return uri;
@@ -152,7 +155,7 @@ public class RestTemplateController {
 
     //restTemplate.headForHeaders()
     //@GetMapping("/user/headerForHeaders/{id}")
-    @RequestMapping(value = "/user/headerForHeaders/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/headerForHeaders/{id}", method = RequestMethod.GET)
     public String headerForHeaders(@PathVariable String id) {
         String url = "http://127.0.0.1:7900/user/headerForHeaders/info/" + id;
         HttpHeaders httpHeaders = restTemplate.headForHeaders(url, id);
@@ -182,7 +185,7 @@ public class RestTemplateController {
     }
 
     //@DeleteMapping("/user/delete/info/{id}")
-    @RequestMapping(value = "/user/delete/info/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/user/delete/info/{id}", method = RequestMethod.DELETE)
     public void deleteInfo() {
         User user = new User();
         user.setId(10l);
@@ -193,7 +196,7 @@ public class RestTemplateController {
 
     //restTemplate.optionsForAllow()
     //@GetMapping("/user/optionsForAllow/{id}")
-    @RequestMapping(value = "/user/optionsForAllow/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/optionsForAllow/{id}", method = RequestMethod.GET)
     public Set<HttpMethod> optionsForAllow(@PathVariable String id) {
         String url = "http://127.0.0.1:7900/user/optionsForAllow/info/" + id;
         Set<HttpMethod> setHttpMethod = restTemplate.optionsForAllow(url, id);
@@ -201,7 +204,7 @@ public class RestTemplateController {
     }
 
     //@GetMapping("/user/optionsForAllow/info/{id}")
-    @RequestMapping(value = "/user/optionsForAllow/info/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/optionsForAllow/info/{id}", method = RequestMethod.GET)
     public void optionsForAllowInfo() {
         User user = new User();
         user.setId(10l);
@@ -212,7 +215,7 @@ public class RestTemplateController {
 
     //restTemplate.exchange()
     //@GetMapping("/user/exchange/{id}")
-    @RequestMapping(value = "/user/exchange/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/exchange/{id}", method = RequestMethod.GET)
     public String exchange(@PathVariable String id) {
         String url = "http://127.0.0.1:7900/user/exchange/info/" + id;
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
@@ -268,7 +271,7 @@ public class RestTemplateController {
     }
 
     //@PatchMapping("/user/patchForObject/info/{id}")
-    @RequestMapping(value = "/user/patchForObject/info/{id}",method = RequestMethod.PATCH)
+    @RequestMapping(value = "/user/patchForObject/info/{id}", method = RequestMethod.PATCH)
     public String patchForObject() {
         User user = new User();
         user.setId(10l);
@@ -283,8 +286,8 @@ public class RestTemplateController {
     public String netty(@PathVariable String id) {
         RestTemplate restTemplate1 = new RestTemplate();
         Netty4ClientHttpRequestFactory requestFactory = new Netty4ClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(5000);
-        requestFactory.setMaxResponseSize(10000);
+        //requestFactory.setConnectTimeout(5000);
+        //requestFactory.setMaxResponseSize(10000);
         restTemplate1.setRequestFactory(requestFactory);
         String url = "http://127.0.0.1:7900/user/netty/info/" + id;
 
@@ -321,7 +324,7 @@ public class RestTemplateController {
     }
 
     //@GetMapping("/user/okHttp/info/{id}")
-    @RequestMapping(value = "/user/okHttp/info/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/okHttp/info/{id}", method = RequestMethod.GET)
     public String okHttpInfo(@PathVariable String id) {
         User user = new User();
         user.setId(Long.valueOf(id));
@@ -357,5 +360,43 @@ public class RestTemplateController {
         System.err.println(user.toString());
         return user.toString();
     }
+
+    //urlConnection()
+    //@GetMapping("/user/urlConnection/{id}")
+    @RequestMapping("/user/urlConnection/{id}")
+    public String urlConnection(@PathVariable String id) {
+        RestTemplate restTemplate1 = new RestTemplate();
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(5000);
+        requestFactory.setReadTimeout(5000);
+        restTemplate1.setRequestFactory(requestFactory);
+
+        String url = "http://127.0.0.1:7900/user/urlConnection/info/" + id;
+        String result = restTemplate1.getForObject(url, String.class);
+        return result;
+    }
+
+    //@GetMapping("/user/urlConnection/info/{id}")
+    @RequestMapping("/user/urlConnection/info/{id}")
+    public String urlConnectionInfo(@PathVariable String id) {
+        return "hello,world; id: " + id;
+    }
+
+
+
+    @RequestMapping("/user/netty/exchange/{id}")
+    public String getInfo(@PathVariable String id){
+        RestTemplate restTemplate1 = new RestTemplate();
+        Netty4ClientHttpRequestFactory requestFactory = new Netty4ClientHttpRequestFactory();
+        restTemplate1.setRequestFactory(requestFactory);
+
+        String url = "http://127.0.0.1:7900/user/urlConnection/info/{id}";
+        ResponseEntity<String> responseEntity=restTemplate1.exchange(url,HttpMethod.GET,null,
+                String.class,id);
+        return responseEntity.getBody();
+    }
+
+
+
 
 }

@@ -18,5 +18,7 @@ public class RestTemplateBuilderConfig {
     @Bean
     public RestTemplate getRestTemplate() {
         return restTemplateBuilder.build();
+        //RestTemplate restTemplate=new RestTemplate();
+        //return  restTemplate;
     }
 }
