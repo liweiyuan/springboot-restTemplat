@@ -257,7 +257,7 @@ public class RestTemplateController {
 
     //restTemplate.patchForObject()
     //@GetMapping("/user/patchForObject/{id}")
-    @RequestMapping("/user/patchForObject/{id}")
+    /*@RequestMapping("/user/patchForObject/{id}")
     public String patchForObject(@PathVariable String id) {
         RestTemplate restTemplate1 = new RestTemplate();
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
@@ -268,7 +268,7 @@ public class RestTemplateController {
 
         String result = restTemplate1.patchForObject(url, null, String.class, id);
         return result;
-    }
+    }*/
 
     //@PatchMapping("/user/patchForObject/info/{id}")
     @RequestMapping(value = "/user/patchForObject/info/{id}", method = RequestMethod.PATCH)
@@ -378,7 +378,9 @@ public class RestTemplateController {
 
     //@GetMapping("/user/urlConnection/info/{id}")
     @RequestMapping("/user/urlConnection/info/{id}")
-    public String urlConnectionInfo(@PathVariable String id) {
+    public String urlConnectionInfo(@PathVariable String id) throws InterruptedException {
+
+        Thread.sleep(3000);
         return "hello,world; id: " + id;
     }
 
